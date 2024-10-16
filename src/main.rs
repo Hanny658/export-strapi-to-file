@@ -22,6 +22,7 @@ struct ExportRequest {
 #[actix_web::main]
 async fn main() {
     dotenv::dotenv().ok(); // Load .env
+    let data_name = "advertisements";
 
     // Creat Endpoints from API and ENV
     let strapi_endpoint = env::var("STRAPI_ENDPOINT").unwrap_or_else(|_| "https://api.do360.com/api".to_string());
@@ -38,8 +39,10 @@ async fn main() {
     let mut file = File::open("TestData.json").expect("File not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Something went wrong reading the file");
-    let test_data: Value = serde_json::from_str(&contents).expect("Invalid JSON format");
+    let res_data: Value = serde_json::from_str(&contents).expect("Invalid JSON format");
 
+
+    /* TODO: When passed, change the upper block to this ===============
 
     // Create request URL
     let api_url = format!("{}{}?populate=*", strapi_endpoint, "advertisements");
@@ -54,16 +57,19 @@ async fn main() {
 
     if response.status().is_success() { // double check never fails!
         let res_data: Value = response.json().await.expect("Failed to parse JSON");
-        println!("{:#?}", res_data);
     } else {
         println!("Request failed with status: {}", response.status());
     }
+
+    ================================== */
     
 
-
+    println!("{:#?}", res_data);
     //println!("Endpoint is '{}' and API URL is '{}'.", strapi_endpoint, api_url);
     generate_pdf();
-    generate_excel();
+    if let Err(e) = generate_excel(&res_data, data_name) {
+        eprintln!("Export faliure: {}", e);
+    }
 }
 
 
