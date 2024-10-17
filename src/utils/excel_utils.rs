@@ -2,15 +2,19 @@ use rust_xlsxwriter::*;
 use serde_json::Value;
 use inflector::Inflector;
 use std::error::Error;
+use std::fs;
 
-pub fn generate_excel(json_data: &Value, data_name: &str) -> Result<(), Box<dyn Error>> {
+pub fn generate_excel(json_data: &Value, data_name: &str) -> Result<String, Box<dyn Error>>  {
     // Save to a capitalised filename
     let file_name = format!("{}.xlsx", data_name.to_title_case());
+    let file_path = format!("./exports/{}", file_name);
+    // Create the exports directory if it doesn't exist
+    fs::create_dir_all("./exports")?;
 
     let mut workbook = Workbook::new();
 
     // Add a worksheet without specifying a name
-    let worksheet = workbook.add_worksheet();
+    let worksheet: &mut Worksheet = workbook.add_worksheet();
 
     if let Some(data_array) = json_data["data"].as_array() {
         if !data_array.is_empty() {
@@ -54,7 +58,8 @@ pub fn generate_excel(json_data: &Value, data_name: &str) -> Result<(), Box<dyn 
                 }
             }
 
-            workbook.save(&file_name)?; // Save the workbook to local
+            workbook.save(&file_path)?; // Save the workbook to local
+
         } else {
             println!("JSON is Empty...");
         }
@@ -63,5 +68,5 @@ pub fn generate_excel(json_data: &Value, data_name: &str) -> Result<(), Box<dyn 
     }
 
     println!("Excel Exported as: {}", file_name);
-    Ok(())
+    Ok(file_path) // Return the file path
 }

@@ -38,7 +38,7 @@ PORT=3001
 
 <br />
 <div align="center">
-Created by <b>Hanny</b> as a Project for <b>FUN</b>, I'll be glad if this simple small thing boosted your big projects.<br />
+Created by <b>Hanny</b> as a Project for <b>FUN</b>, I'll be glad if this simple small thing could boost your big projects.<br />
 Last Edit 17/10/2024<br />
 Last but not least (as always) << <b>Algorithms are FUN!!!</b> >>
 </div>
