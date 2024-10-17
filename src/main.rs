@@ -85,5 +85,5 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
-/* Created by Hanny as a Project for FUN | Last Edit 16/10/2024 */
-/* Last but not least ->>>>>> Algorithms are FUN!!! */
+/* Created by Hanny as a Project for FUN
+   Last but not least ->>>>>> Algorithms are FUN!!! */
