@@ -4,7 +4,7 @@ use inflector::Inflector;
 use std::error::Error;
 
 pub fn generate_excel(json_data: &Value, data_name: &str) -> Result<(), Box<dyn Error>> {
-    // Save to a capitalised file
+    // Save to a capitalised filename
     let file_name = format!("{}.xlsx", data_name.to_title_case());
 
     let mut workbook = Workbook::new();
