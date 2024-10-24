@@ -100,7 +100,16 @@ async fn main() -> std::io::Result<()> {
 
     // Start the Actix web server
     HttpServer::new(|| {
+        // Enable CORS
+        let cors = Cors::default()
+            .allow_any_origin()     // For further limit, change this line to .allowed_origin("https://you-origin.com")
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![http::header::CONTENT_TYPE, http::header::AUTHORIZATION])
+            .supports_credentials()
+            .max_age(3600);
+
         App::new()
+            .wrap(cors) // Add CORS middleware
             .service(export_file)
     })
     .bind(("0.0.0.0", port))?
