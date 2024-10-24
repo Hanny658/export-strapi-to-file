@@ -12,7 +12,67 @@ Takes 2 piece of data: 'format' specifying the format for export and 'data_name'
 }
 ```
 Success Message: ```[format] file for [Collection Type] created successfully.```
+<br/>Sample Call from React-App:
+```bash
+function DownloadButton({ format, dataName }) {
+    const handleDownload = async () => {
+        try {
+            // Define the API URL
+            const apiUrl = 'http://localhost:3000/export';
 
+            // Make a POST request to initiate the file export/download
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    format: format,
+                    data_name: dataName,
+                }),
+            });
+
+            // Check if the response is OK
+            if (response.ok) {
+                // Extract filename from the response header
+                const disposition = response.headers.get('Content-Disposition');
+                const filename = disposition
+                    ? disposition.split('filename=')[1].replace(/\"/g, '')
+                    : 'downloaded-file';
+
+                // Create a Blob from the response body
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                // Create a temporary anchor element and click it to download the file
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+
+                // Cleanup
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error('File download failed:', response.statusText);
+                alert('Error downloading file. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while downloading the file.');
+        }
+    };
+
+    return (
+        <button onClick={handleDownload}>
+            Download {format === 'pdf' ? 'PDF' : 'Excel'}
+        </button>
+    );
+}
+
+export default DownloadButton;
+```
 
 ### Need to have your own .env file to record:
 - Your Backend Host
